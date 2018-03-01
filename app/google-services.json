@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1070101202064",
+    "firebase_url": "https://govcom-e0bc4.firebaseio.com",
+    "project_id": "govcom-e0bc4",
+    "storage_bucket": "govcom-e0bc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070101202064:android:509af380e842ceb6",
+        "android_client_info": {
+          "package_name": "com.example.simiboba.govcom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070101202064-k6plpklg93j5417uokcrm4kc2pmchcuh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO4iL4BI053Q_9t993EOh4q3fU8IeEajk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
