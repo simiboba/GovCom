@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1070101202064-gbf0vproqvhr1gksla59m0pt81nlag4e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.simiboba.govcom",
+            "certificate_hash": "359a43f5504166175527294d4a43e6db9dd93469"
+          }
+        },
+        {
           "client_id": "1070101202064-k6plpklg93j5417uokcrm4kc2pmchcuh.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070101202064-k6plpklg93j5417uokcrm4kc2pmchcuh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
