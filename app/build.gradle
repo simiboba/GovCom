@@ -32,5 +32,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-crash:11.8.0'
     // twitter dependencies
     implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
+    implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
+        transitive = true;
+    }
+    // twitter4j dependency
+    implementation 'org.twitter4j:twitter4j-core:4.0.4'
+
 }
 apply plugin: 'com.google.gms.google-services'

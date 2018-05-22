@@ -16,6 +16,7 @@ public class Feed {
     private Boolean isFacebook = new Boolean(false);
     private String description = null;
     private String screenName = null;
+    private Boolean subscribedTo = false;
 
     public Feed(String name, List<String> states, List<String> towns, Boolean isTwitter,
                 Boolean isFacebook, String description, String screenName) {
@@ -52,4 +53,10 @@ public class Feed {
     public String getScreenName() { return screenName; }
     public void setScreenName( String screenName ) { this.screenName = screenName; }
 
+    public void setSubscribedTo(Boolean subscribedTo) {
+        this.subscribedTo = subscribedTo;
+    }
+    public Boolean getSubscribedTo() {
+        return this.subscribedTo;
+    }
 }

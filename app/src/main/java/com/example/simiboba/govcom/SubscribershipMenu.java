@@ -1,10 +1,12 @@
 package com.example.simiboba.govcom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,9 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SubscribershipMenu extends AppCompatActivity {
@@ -45,7 +50,6 @@ public class SubscribershipMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribership_menu);
-        Twitter.initialize(this);
 
         getLocations();
 
@@ -85,6 +89,8 @@ public class SubscribershipMenu extends AppCompatActivity {
                 // Listview on child click listener
                 listViewGroupChildClickListener();
 
+                getFeeds();
+
             }
 
             @Override
@@ -101,18 +107,34 @@ public class SubscribershipMenu extends AppCompatActivity {
             @Override
             public void onDataChange (DataSnapshot dataSnapshot) {
                 Log.i("feed num: database", Long.toString(dataSnapshot.getChildrenCount()));
-                HashSet<String> screenNames = new HashSet<String>();
+                Set<String> screenNames;
+                SharedPreferences sp = getSharedPreferences("userFeeds", Context.MODE_PRIVATE);
+                if (sp.contains("screenNames")) {
+                    screenNames = sp.getStringSet("screeNames", null);
+                }
+                else {
+                    screenNames = new HashSet<String>();
+                }
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     Feed feed = child.getValue(Feed.class);
                     feeds.add(feed);
 
+                    for (String screenName : screenNames) {
+                        if (feed.getScreenName().equals(screenName)) {
+                            feed.setSubscribedTo(true);
+                        }
+                    }
                     // for feedview starting purposes simply storing all of the feed name
-                    screenNames.add(feed.getScreenName());
+                    // screenNames.add(feed.getScreenName());
                 }
-                SharedPreferences sp = SubscribershipMenu.this.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putStringSet("screenNames", screenNames);
-
+                editor.apply();
+                for (String sn : screenNames) {
+                    Log.i("screen name", sn);
+                    Log.i("sn num", Integer.toString(screenNames.size()));
+                }
                 Log.i("feed num", Integer.toString(feeds.size()));
             }
 
@@ -182,6 +204,40 @@ public class SubscribershipMenu extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
+                LinearLayout overlay = (LinearLayout) findViewById(R.id.overlay);
+                LinearLayout mainMenu = (LinearLayout) findViewById(R.id.main_menu);
+                ListView overlayList = (ListView) findViewById(R.id.overlay_list);
+                mainMenu.setVisibility(View.GONE);
+                TextView header = (TextView) findViewById(R.id.location_label);
+                String state = listDataHeader.get(groupPosition);
+                String town = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                header.setText(state + " : " + town);
+
+                ArrayList<Feed> specifiedFeeds = new ArrayList<Feed>();
+                for (Feed feed : feeds) {
+                    for (String curState : feed.getStates()) {
+                        if (curState.equals(state)) {
+                            if (feed.getTowns().get(0).length() == 0) {
+                                specifiedFeeds.add(feed);
+                                break;
+                            }
+                            else {
+                                for (String curTown : feed.getTowns()) {
+                                    if (curTown.equals(town)) {
+                                        specifiedFeeds.add(feed);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ArrayAdapter<Feed> adapter
+                        = new FeedListAdapter(SubscribershipMenu.this,
+                        R.layout.feed_list_item, specifiedFeeds);
+                overlayList.setAdapter(adapter);
+                overlay.setVisibility(View.VISIBLE);
                 // TODO Auto-generated method stub
                 Toast.makeText(
                         getApplicationContext(),
@@ -191,8 +247,22 @@ public class SubscribershipMenu extends AppCompatActivity {
                                 listDataHeader.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT)
                         .show();
+                Log.i("listViewGroupChild", "right listener");
+
                 return false;
             }
         });
+    }
+
+    public void toFeed(View view)
+    {
+        Intent intent = new Intent(SubscribershipMenu.this, PostPage.class);
+        startActivity(intent);
+    }
+    public void back(View view) {
+        LinearLayout overlay = (LinearLayout) findViewById(R.id.overlay);
+        overlay.setVisibility(View.GONE);
+        LinearLayout mainMenu = (LinearLayout) findViewById(R.id.main_menu);
+        mainMenu.setVisibility(View.VISIBLE);
     }
 }
